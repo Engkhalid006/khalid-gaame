@@ -1,0 +1,108 @@
+
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <title>لعبة الحيوانات 🐾</title>
+    <style>
+        body {
+            background-color: #4dd0e1;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+        h1 {
+            font-size: 2.5em;
+            margin-top: 20px;
+        }
+        #question {
+            background-color: white;
+            display: inline-block;
+            padding: 20px;
+            margin: 20px;
+            border-radius: 10px;
+            font-size: 2em;
+            border: 2px solid black;
+        }
+        .answer {
+            display: inline-block;
+            background-color: #9575cd;
+            color: white;
+            padding: 20px;
+            margin: 10px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1.5em;
+            min-width: 120px;
+        }
+        .answer:hover {
+            background-color: #7e57c2;
+        }
+        #timer {
+            font-size: 1.5em;
+            margin: 10px;
+            color: #ff5252;
+        }
+    </style>
+</head>
+<body>
+    <h1>لعبة الحيوانات 🐾</h1>
+    <div id="timer">الوقت: 50 ثانية</div>
+    <div id="question">...</div>
+    <div id="answers"></div>
+
+    <script>
+        const questions = [
+            { q: "ضخم ولديه خرطوم طويل", a: ["فيل", "أسد", "زرافة", "سمكة"], correct: "فيل" },
+            { q: "أطول حيوان بري", a: ["زرافة", "فيل", "أسد", "سمكة"], correct: "زرافة" },
+            { q: "ملك الغابة", a: ["أسد", "نمر", "دب", "كنغر"], correct: "أسد" },
+            { q: "يعيش في الماء وله زعانف", a: ["سمكة", "جمل", "فيل", "زرافة"], correct: "سمكة" },
+            { q: "ينبح وهو حيوان أليف", a: ["كلب", "قطة", "أسد", "نمر"], correct: "كلب" }
+        ];
+
+        let timer = 50;
+        let timerInterval;
+
+        function startGame() {
+            showQuestion();
+            timerInterval = setInterval(() => {
+                timer--;
+                if (timer <= 0) {
+                    timer = 0;
+                    clearInterval(timerInterval);
+                    alert("انتهى الوقت! حاول مرة أخرى.");
+                    window.location.reload();
+                }
+                document.getElementById("timer").innerText = `الوقت: ${timer} ثانية`;
+            }, 1000);
+        }
+
+        function showQuestion() {
+            const randomQuestion = questions[Math.floor(Math.random() * questions.length)];
+            document.getElementById("question").innerText = randomQuestion.q;
+            const answersContainer = document.getElementById("answers");
+            answersContainer.innerHTML = "";
+            randomQuestion.a.forEach(answer => {
+                const button = document.createElement("div");
+                button.className = "answer";
+                button.innerText = answer;
+                button.onclick = () => checkAnswer(answer, randomQuestion.correct);
+                answersContainer.appendChild(button);
+            });
+        }
+
+        function checkAnswer(selected, correct) {
+            if (selected === correct) {
+                timer += 10;
+            } else {
+                timer -= 10;
+                if (timer < 0) timer = 0;
+            }
+            showQuestion();
+        }
+
+        window.onload = startGame;
+    </script>
+</body>
+</html>
